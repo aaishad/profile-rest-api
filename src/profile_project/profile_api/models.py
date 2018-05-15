@@ -4,7 +4,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 
 # Create your models here.
-class UserProfileManager():
+class UserProfileManager(BaseUserManager):
     """ Helps django work our custom user models"""
 
     def create_user(self,email,name,password=None):
@@ -16,10 +16,11 @@ class UserProfileManager():
 
         user.set_password(password)
         user.save(using=self._db)
+        return user
 
     def create_superuser(self,email,name,password):
         """ create and saves and super user"""
-        user = create_user(self,email,name,password)
+        user = self.create_user(email,name,password)
         user.is_superuser = True
         user.is_staff = True
         user.save(using=self._db)
